@@ -1,6 +1,5 @@
 # Globe
 DOMAIN-SUFFIX,checkoutshopper-live.adyen.com,PH
-DOMAIN-SUFFIX,*.globe.com.ph,PH
 DOMAIN-SUFFIX,globe.com.ph,PH
 DOMAIN-SUFFIX,www.globe.com.ph,PH
 DOMAIN-SUFFIX,live-cortex-gw.al.ep.cloudops.globe.com.ph,PH
@@ -8,7 +7,6 @@ DOMAIN-SUFFIX,live-cortex-gw.al.ep.cloudops.globe.com.ph,PH
 # Gcash
 DOMAIN,gcash-api.pulseid.com,PH
 DOMAIN-SUFFIX,gcash.com,PH
-DOMAIN-SUFFIX,*.gcash.com,PH
 DOMAIN-SUFFIX,www.gcash.com,PH
 DOMAIN-KEYWORD,gcash,PH
 
