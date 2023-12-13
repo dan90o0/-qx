@@ -1,0 +1,27 @@
+# Globe
+DOMAIN-SUFFIX,checkoutshopper-live.adyen.com,PH
+DOMAIN-SUFFIX,.globe.com.ph,PH
+DOMAIN-SUFFIX,globe.com.ph,PH
+DOMAIN-SUFFIX,www.globe.com.ph,PH
+DOMAIN-SUFFIX,live-cortex-gw.al.ep.cloudops.globe.com.ph,PH
+
+# Gcash
+DOMAIN,gcash-api.pulseid.com,PH
+DOMAIN-SUFFIX,gcash.com,PH
+DOMAIN-SUFFIX,.gcash.com,PH
+DOMAIN-SUFFIX,www.gcash.com,PH
+DOMAIN-KEYWORD,gcash,PH
+
+# Smart
+DOMAIN-SUFFIX,.smart.com.ph,PH
+DOMAIN-SUFFIX,*.smart.com.ph,PH
+DOMAIN-SUFFIX,smart.com.ph,PH
+DOMAIN-SUFFIX,app1.smart.com.ph,PH
+
+# Maya
+DOMAIN-SUFFIX,cryptosrvc.com,PH
+DOMAIN-KEYWORD,paymaya,PH
+DOMAIN-SUFFIX,paymaya.com,PH
+DOMAIN-KEYWORD,mayabank,PH
+DOMAIN-SUFFIX,mayabank.ph,PH
+
