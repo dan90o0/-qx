@@ -1,51 +1,45 @@
-// @grant url
-// @grant responseBody
+// QX Script: trakt2emby.js
+// 类型: response-body
 
-(async () => {
+(async function() {
   const html = $response.body;
-  const url = $request.url;
-  const match = url.match(/\/shows\/([^/]+)\/seasons\/(\d+)\/episodes\/(\d+)/);
-  if (!match) return $done({ body: html });
 
-  const [_, showSlug, season, episode] = match;
+  // 尝试从 HTML 中提取 TMDB ID（通常嵌在 data-attributes 或 JSON 中）
+  const tmdbMatch = html.match(/data-tmdb-id="(\d+)"/) || html.match(/"tmdb":\s*(\d+)/);
+  if (!tmdbMatch) {
+    $done({});
+    return;
+  }
 
-  const traktApi = `https://api.trakt.tv/shows/${showSlug}/seasons/${season}/episodes/${episode}?extended=full`;
+  const tmdbId = tmdbMatch[1];
 
-  const traktRes = await $task.fetch({
-    url: traktApi,
-    headers: {
-      "Content-Type": "application/json",
-      "trakt-api-version": "2",
-      "trakt-api-key": "af5df01d3f5df9a9c19b04d61dfd89c2" // 官方公开 key
+  // 查询 Emby
+  const embyToken = '477d7e46b2804ea58521f787f473d347';
+  const userId = 'f195d71c74574faeaebf4d667430d38d';
+  const embyUrl = 'https://emby.cn2gias.uk';
+
+  const searchUrl = `${embyUrl}/emby/Items?SearchTerm=${tmdbId}&IncludeItemTypes=Episode&Recursive=true&api_key=${embyToken}`;
+
+  const searchResp = await fetch(searchUrl);
+  const searchJson = await searchResp.json();
+
+  const matched = searchJson.Items?.find(item => item.ProviderIds?.Tmdb == tmdbId);
+  if (!matched) {
+    $done({});
+    return;
+  }
+
+  const episodeId = matched.Id;
+  const jumpUrl = `${embyUrl}/web/index.html#!/item?id=${episodeId}&serverId=${userId}`;
+
+  // 构造跳转（QX中可做302 redirect或弹窗提示）
+  $done({
+    response: {
+      status: 302,
+      headers: {
+        Location: jumpUrl
+      }
     }
   });
 
-  const traktData = JSON.parse(traktRes.body);
-  const tmdbId = traktData?.ids?.tmdb;
-
-  if (!tmdbId) return $done({ body: html });
-
-  // 查询 Emby
-  const embyRes = await $task.fetch({
-    url: `https://emby.cn2gias.uk/Items?Recursive=true&IncludeItemTypes=Episode&AnyProviderIdEquals=tmdb:${tmdbId}&api_key=477d7e46b2804ea58521f787f473d347`
-  });
-
-  const embyData = JSON.parse(embyRes.body);
-  const embyId = embyData?.Items?.[0]?.Id;
-
-  if (!embyId) return $done({ body: html });
-
-  const embyUrl = `https://emby.cn2gias.uk/web/index.html#!/item/item.html?id=${embyId}`;
-
-  // 构造按钮并注入
-  const buttonHtml = `
-    <div style="position:fixed;bottom:80px;right:20px;z-index:9999;">
-      <a href="${embyUrl}" target="_blank" style="padding:10px 15px;background:#4caf50;color:white;font-size:14px;border-radius:6px;text-decoration:none;box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        ▶ 打开 Emby
-      </a>
-    </div>
-  `;
-
-  const newHtml = html.replace('</body>', `${buttonHtml}</body>`);
-  $done({ body: newHtml });
 })();
